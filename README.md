@@ -1,6 +1,6 @@
 # PasswordKeeper
-This is a password manager that can save and generate passwords.
-Quick overview of available functions:
+This is a password manager that can save and generate passwords.  
+Quick overview of available functions:  
   print        outputs all saved passwords  
   generate     generates a password and offers to save it and to copy it to clipboard  
   add          saves a password  
