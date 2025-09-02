@@ -24,41 +24,45 @@ def generate():
 def guide_tour():
     print()
     print()
-    print("This program can save and generate password for different websites.")
-    print("Press escape to save all changes and exit.")
+    print("  This program can save and generate password for different websites.")
+    print("  Press escape to save all changes and exit.")
     print()
-    print("Commands:")
-    print("help            outputs this message")
-    print("generate        generates a password")
-    print("add             asks the resource's name and password and remembers them")
-    print("get             asks resource's name and outputs saved password")
-    print("print           outputs all saved resources with passwords")
-    print("open            asks for a website's URL and opens it")
-    print("edit            changes saved password")
-    print("remove          removes saved password")
-    print("exit            saves everything and exits")
+    print("  Commands:")
+    print("  help            outputs this message")
+    print("  generate        generates a password")
+    print("  add             asks the resource's name and data and remembers them")
+    print("  get             asks resource's name and outputs saved password")
+    print("  print           outputs all saved resources with passwords")
+    print("  open            asks for a website's URL and opens it")
+    print("  clear           removes all saved passwords")
+    print("  remove          removes saved password")
+    print("  exit            saves everything and exits")
     print()
 
 def get():
-    website = input("Which website's password do you want to get?: ")
-    print(passwords[website])
+    website = input("  Which website's data do you want to get?: ")
+    try:
+        print("  Login: " + passwords[website][0])
+        print("  Password: " + passwords[website][1])
+    except KeyError:
+        print(f"  You didn't save any passwords for {website}")
 
-def add(password=None):
-    if password is None:
-        password = input("Type the password you want to save: ")
-    website = input("Type the website you want to save the password for: ")
-    passwords[website] = password
+def add():
+    website = input("  Type the website you want to save the password for: ")
+    login = input("  Input your login (username): ")
+    password = input("  Input your password: ")
+    passwords[website] = [login, password]
 
 def edit():
-    website = input("Which website's password do you want to change?: ")
+    website = input(" Which website's password do you want to change?: ")
     try:
         check = passwords[website]
     except KeyError:
-        print("You don't have a saved password for this website")
+        print("  You don't have a saved password for this website")
         return
-    password = input("Which password do you want to set for this website?: ")
+    password = input("  Which password do you want to set for this website?: ")
     if password == "":
-        print("Password can't be empty")
+        print("  Password can't be empty")
     else:
         passwords[website] = password
 
@@ -80,15 +84,12 @@ def sign_up():
     return key
 
 def remove():
-    website = input("Password for which sebsite you want to delete?: ")
+    website = input("  Password for which sebsite you want to delete?: ")
     try:
         del passwords[website]
     except KeyError:
-        print(f"Wrong URL or the password for {website} isn't saved. Try again, please")
+        print(f"  Wrong URL or the password for {website} isn't saved. Try again, please")
 
-def save(password):
-    url = input("What website is this password for? ")
-    passwords[url] = password
 
 acess = True
 print("Welcome to the PasswordKeeper!")
@@ -127,7 +128,7 @@ else:
         if not res == "":
             passwords = json.loads(res)
 if acess:
-    print(">", end="")
+    print("> ", end="")
     while True:
         command = input().lower()
         match command:
@@ -135,33 +136,34 @@ if acess:
                 guide_tour()
             case "remove":
                 remove()
+            case "clear":
+                do = input("  Are you sure you want to delete all saved passwords? y/n: ").lower()
+                if do == "y":
+                    passwords = {}
             case "exit":
                 escape()
             case "generate":
                 res = generate()
-                print(f"Your password is: {res}")
-                cp = input("Do you want to copy it to clipboard? y/n: ").lower()
+                print(f"  Your password is: {res}")
+                cp = input("  Do you want to copy it to clipboard? y/n: ").lower()
                 if cp == 'y':
                     pyperclip.copy(res)
-                save = input("Do you want to save this password? y/n").lower()
-                if save == 'y':
-                    add(res)
+                    print("  Successfully copied!")
             case "get":
                 get()
-            case "edit":
-                edit()
             case "open":
-                url = input("What website do you want to open?")
+                url = input("  What website do you want to open?: ")
                 webbrowser.open(url=url, new = 1)
             case "add":
                 add()
             case "print":
                 if passwords == {}:
-                    print("You didn't save any passwords")
+                    print("  You didn't save any passwords")
                 for i in passwords:
-                    print(i, end="      ")
-                    print(passwords[i])
+                    print("  ", end="")
+                    print(i, end="       ")
+                    print(passwords[i][0], end="       ")
+                    print(passwords[i][1])
             case _:
-                print("Unknown command. Try again")
-                continue
-        print(">", end="")
+                print("  Unknown command. Try again")
+        print("> ", end="")
